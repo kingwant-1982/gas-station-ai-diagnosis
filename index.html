@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>加油站AI诊断助手</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AI诊断">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjE5MiIgaGVpZ2h0PSIxOTIiIHJ4PSI0MCIgZmlsbD0idXJsKCNncmFkaWVudDBfbGluZWFyXzFfMSkiLz48cGF0aCBkPSJNOTYgNDhDMTEyIDQ4IDEyOCA1NiAxMjggNzJWODRDMTM2IDg0IDE0NCA5MiAxMzYgMTAwTDEyOCAxMDhWMTIwQzEyOCAxMzYgMTEyIDE0NCA5NiAxNDRIODRDNzYgMTQ0IDY0IDEzNiA2NCAxMjBWMTA4TDU2IDEwMEM0OCA5MiA1NiA4NCA2NCA4NFY3NkM2NCA1NiA4MCA0OCA5NiA0OFoiIGZpbGw9IndoaXRlIi8+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudDBfbGluZWFyXzFfMSIgeDE9IjAiIHkxPSIwIiB4Mj0iMTkyIiB5Mj0iMTkyIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iIzYzNjZmMSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzhiNWNmNiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjwvc3ZnPg==">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 顶部导航栏 -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo">
+                        <i class="fas fa-gas-pump"></i>
+                    </div>
+                    <h1>加油站AI诊断</h1>
+                </div>
+                <div class="header-controls">
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon" id="themeIcon"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主内容区域 -->
+        <main class="main-content">
+            <!-- 诊断页面 -->
+            <div class="page" id="diagnosisPage">
+                <div class="welcome-section">
+                    <div class="avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h2>您好，AI诊断助手</h2>
+                    <p>请描述您遇到的问题，我来帮您诊断分析</p>
+                </div>
+
+                <!-- 输入区域 -->
+                <div class="input-section">
+                    <div class="input-container">
+                        <textarea 
+                            class="text-input" 
+                            placeholder="请描述您遇到的设备故障或问题..."
+                            rows="4"
+                            id="problemInput"
+                        ></textarea>
+                        
+                        <!-- 附件上传区域 -->
+                        <div class="attachment-area">
+                            <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+                            <div class="attachment-buttons">
+                                <button class="attachment-btn" onclick="document.getElementById('fileInput').click()">
+                                    <i class="fas fa-paperclip"></i>
+                                    选择图片
+                                </button>
+                                <button class="attachment-btn" id="cameraBtn">
+                                    <i class="fas fa-camera"></i>
+                                    拍照上传
+                                </button>
+                            </div>
+                            <div class="uploaded-files" id="uploadedFiles"></div>
+                        </div>
+                    </div>
+
+                    <!-- 选项设置 -->
+                    <div class="options-section">
+                        <div class="option-group">
+                            <h3>诊断选项</h3>
+                            <div class="checkbox-group">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="expertMode">
+                                    <span class="checkmark"></span>
+                                    专家模式
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" id="networkMode">
+                                    <span class="checkmark"></span>
+                                    联网查询
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 专家协助选择 -->
+                        <div class="expert-section" id="expertSection" style="display: none;">
+                            <h3>专家协助</h3>
+                            <div class="expert-grid">
+                                <label class="expert-card">
+                                    <input type="checkbox" name="expert" value="mechanical">
+                                    <div class="expert-content">
+                                        <i class="fas fa-cog"></i>
+                                        <span>机械专家</span>
+                                    </div>
+                                </label>
+                                <label class="expert-card">
+                                    <input type="checkbox" name="expert" value="electrical">
+                                    <div class="expert-content">
+                                        <i class="fas fa-bolt"></i>
+                                        <span>电气专家</span>
+                                    </div>
+                                </label>
+                                <label class="expert-card">
+                                    <input type="checkbox" name="expert" value="safety">
+                                    <div class="expert-content">
+                                        <i class="fas fa-shield-alt"></i>
+                                        <span>安全专家</span>
+                                    </div>
+                                </label>
+                                <label class="expert-card">
+                                    <input type="checkbox" name="expert" value="maintenance">
+                                    <div class="expert-content">
+                                        <i class="fas fa-tools"></i>
+                                        <span>维护专家</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 输出模式选择 -->
+                        <div class="output-section">
+                            <h3>输出模式</h3>
+                            <div class="output-modes">
+                                <label class="mode-card">
+                                    <input type="radio" name="outputMode" value="pdf" checked>
+                                    <div class="mode-content">
+                                        <i class="fas fa-file-pdf"></i>
+                                        <span>PDF报告</span>
+                                    </div>
+                                </label>
+                                <label class="mode-card">
+                                    <input type="radio" name="outputMode" value="table">
+                                    <div class="mode-content">
+                                        <i class="fas fa-table"></i>
+                                        <span>表格模式</span>
+                                    </div>
+                                </label>
+                                <label class="mode-card">
+                                    <input type="radio" name="outputMode" value="document">
+                                    <div class="mode-content">
+                                        <i class="fas fa-file-alt"></i>
+                                        <span>文档模式</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 提交按钮 -->
+                    <button class="submit-btn" id="submitBtn">
+                        <i class="fas fa-play"></i>
+                        开始诊断
+                    </button>
+                </div>
+            </div>
+
+            <!-- 任务执行页面 -->
+            <div class="page hidden" id="executionPage">
+                <div class="execution-header">
+                    <button class="back-btn" id="backBtn">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>正在执行诊断任务</h2>
+                </div>
+                
+                <div class="task-progress">
+                    <div class="progress-item" id="task1">
+                        <div class="progress-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="progress-content">
+                            <h4>问题分析</h4>
+                            <p>正在分析您描述的问题...</p>
+                        </div>
+                        <div class="progress-status">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item" id="task2">
+                        <div class="progress-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <div class="progress-content">
+                            <h4>知识库查询</h4>
+                            <p>正在搜索相关解决方案...</p>
+                        </div>
+                        <div class="progress-status">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item" id="task3">
+                        <div class="progress-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="progress-content">
+                            <h4>专家协助</h4>
+                            <p>专家正在审核诊断结果...</p>
+                        </div>
+                        <div class="progress-status">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-item" id="task4">
+                        <div class="progress-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="progress-content">
+                            <h4>生成报告</h4>
+                            <p>正在生成诊断报告...</p>
+                        </div>
+                        <div class="progress-status">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="execution-result" id="executionResult" style="display: none;">
+                    <div class="result-header">
+                        <i class="fas fa-check-circle success"></i>
+                        <h3>诊断完成</h3>
+                    </div>
+                    <div class="result-actions">
+                        <button class="action-btn primary" id="viewReportBtn">
+                            <i class="fas fa-eye"></i>
+                            查看报告
+                        </button>
+                        <button class="action-btn secondary" id="downloadBtn">
+                            <i class="fas fa-download"></i>
+                            下载报告
+                        </button>
+                        <button class="action-btn secondary" id="newDiagnosisBtn">
+                            <i class="fas fa-plus"></i>
+                            新建诊断
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 历史页面 -->
+            <div class="page hidden" id="historyPage">
+                <div class="page-header">
+                    <h2>诊断历史</h2>
+                    <button class="clear-btn" id="clearHistoryBtn">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                
+                <div class="history-list" id="historyList">
+                    <div class="history-item">
+                        <div class="history-info">
+                            <h4>油泵异响问题诊断</h4>
+                            <p>2024-01-15 14:30</p>
+                            <span class="status completed">已完成</span>
+                        </div>
+                        <div class="history-actions">
+                            <button class="history-btn">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="history-btn">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="history-item">
+                        <div class="history-info">
+                            <h4>加油机显示屏故障</h4>
+                            <p>2024-01-14 09:15</p>
+                            <span class="status completed">已完成</span>
+                        </div>
+                        <div class="history-actions">
+                            <button class="history-btn">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="history-btn">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="history-item">
+                        <div class="history-info">
+                            <h4>油路堵塞检测</h4>
+                            <p>2024-01-13 16:45</p>
+                            <span class="status processing">处理中</span>
+                        </div>
+                        <div class="history-actions">
+                            <button class="history-btn">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="history-btn">
+                                <i class="fas fa-pause"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 底部导航 -->
+        <nav class="bottom-nav">
+            <div class="nav-item active" data-page="diagnosisPage">
+                <i class="fas fa-stethoscope"></i>
+                <span>诊断</span>
+            </div>
+            <div class="nav-item" data-page="historyPage">
+                <i class="fas fa-history"></i>
+                <span>历史</span>
+            </div>
+        </nav>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
